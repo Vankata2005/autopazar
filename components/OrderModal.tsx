@@ -5,7 +5,7 @@ import { type Part } from '@/lib/supabase'
 
 type Props = {
   part: Part
-  paymentMethod: 'card' | 'cash_on_delivery'
+  paymentMethod: 'card' | 'cash_on_delivery' | 'whatsapp'
   onClose: () => void
 }
 
@@ -27,7 +27,6 @@ export function OrderModal({ part, paymentMethod, onClose }: Props) {
 
     try {
       if (paymentMethod === 'card') {
-        // Create Stripe checkout
         const res = await fetch('/api/checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -36,19 +35,18 @@ export function OrderModal({ part, paymentMethod, onClose }: Props) {
         const { url } = await res.json()
         if (url) window.location.href = url
       } else {
-        // Cash on delivery — save order directly
         const res = await fetch('/api/orders', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             part_id: part.id,
-            ...form,
             customer_name: form.name,
             customer_phone: form.phone,
             customer_email: form.email,
             customer_address: form.address,
             payment_method: 'cash_on_delivery',
             total: part.price,
+            notes: form.notes,
           }),
         })
         if (res.ok) setDone(true)
@@ -80,7 +78,6 @@ export function OrderModal({ part, paymentMethod, onClose }: Props) {
           </div>
         ) : (
           <div className="p-6 space-y-4">
-            {/* Part summary */}
             <div className="bg-dark-900 rounded-xl p-4 flex justify-between items-center">
               <div>
                 <p className="font-semibold text-sm">{part.title}</p>

@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.CheckoutSession
+    const session = event.data.object as Stripe.Checkout.Session
     const meta = session.metadata!
 
     await supabaseAdmin.from('orders').insert({
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       customer_name: meta.customer_name,
       customer_phone: meta.customer_phone,
       customer_email: session.customer_email,
-      customer_address: meta.customer_address || session.shipping_details?.address?.line1 || '',
+      customer_address: meta.customer_address || '',
       payment_method: 'card',
       status: 'confirmed',
       total: (session.amount_total || 0) / 100,

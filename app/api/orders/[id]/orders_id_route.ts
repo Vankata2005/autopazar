@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
+export const dynamic = 'force-dynamic'
+
 export async function PATCH(req: NextRequest) {
   const auth = req.headers.get('x-admin-password')
   if (auth !== process.env.ADMIN_PASSWORD) {
