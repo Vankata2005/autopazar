@@ -90,7 +90,21 @@ export default function AdminPage() {
   }
 
   const editPart = (p: Part) => {
-    setForm({ ...p, price: String(p.price), original_price: String(p.original_price || ''), year_from: String(p.year_from || ''), year_to: String(p.year_to || '') })
+    setForm({
+      title: p.title,
+      description: p.description,
+      price: String(p.price),
+      original_price: String(p.original_price || ''),
+      category: p.category,
+      brand: p.brand,
+      model: p.model,
+      year_from: String(p.year_from || ''),
+      year_to: String(p.year_to || ''),
+      condition: p.condition,
+      in_stock: p.in_stock,
+      images: p.images || [],
+      part_number: p.part_number || '',
+    })
     setEditing(p.id); setShowForm(true)
   }
 
