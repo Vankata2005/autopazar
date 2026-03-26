@@ -1,14 +1,28 @@
 import { createClient } from '@supabase/supabase-js'
 
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-export const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+console.log('NEXT_PUBLIC_SUPABASE_URL =', supabaseUrl)
+console.log('NEXT_PUBLIC_SUPABASE_ANON_KEY exists =', !!supabaseAnonKey)
+console.log('SUPABASE_SERVICE_ROLE_KEY exists =', !!serviceRoleKey)
+
+if (!supabaseUrl) {
+  throw new Error('NEXT_PUBLIC_SUPABASE_URL is missing')
+}
+
+if (!supabaseAnonKey) {
+  throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY is missing')
+}
+
+if (!serviceRoleKey) {
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY is missing')
+}
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+export const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey)
 
 export type Part = {
   id: string
